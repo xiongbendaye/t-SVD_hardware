@@ -18,3 +18,5 @@ r = ifft(fft(xp) .* fft(ichp));
 for i=1:m
     x_hat(i) = r(n-1+i) * chp(n-1+i);
 end
+
+end
