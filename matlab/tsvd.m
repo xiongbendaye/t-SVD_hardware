@@ -34,12 +34,12 @@ U = zeros(n1,n1,n3);
 S = zeros(n1,n2,n3);
 V = zeros(n2,n2,n3);
 
-A = fft_tsvd(A);
+A_hat = fft_tsvd(A);
 
 % Do the conjugate symetric trick here.
 
 endValue = int16(n3/2 + 1);        
-[U,S,V] = takeSVDs(U,S,V,A,endValue,parOP);
+[U,S,V] = takeSVDs(U,S,V,A_hat,endValue,parOP);
 
 for j =n3:-1:endValue+1
     U(:,:,j) = conj(U(:,:,n3-j+2));
