@@ -71,13 +71,13 @@ end
 if ~runPar || matlabpool('size') == 0
 
     for i=1:endI
-        [U1,S1,V1]=svd(A(:,:,i));
+        [U1,S1,V1]=svdj(A(:,:,i));
         U(:,:,i)=U1; S(:,:,i)=S1; V(:,:,i)=V1;
     end
 else
     
     parfor i=1:endI
-        [U1,S1,V1]=svd(A(:,:,i));
+        [U1,S1,V1]=svdj(A(:,:,i));
         U(:,:,i)=U1; S(:,:,i)=S1; V(:,:,i)=V1;
     end
 end
