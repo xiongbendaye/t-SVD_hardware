@@ -34,7 +34,11 @@ U = zeros(n1,n1,n3);
 S = zeros(n1,n2,n3);
 V = zeros(n2,n2,n3);
 
+fm = quantizer([16,6]);
+
+A_fix = num2bin(fm, A);
 A_hat = fft_tsvd(A);
+A_hat_fix = num2bin(fm, A_hat);
 
 % Do the conjugate symetric trick here.
 
@@ -48,10 +52,17 @@ for j =n3:-1:endValue+1
 end
 
 %%
+U_fix = num2bin(fm, U);
+S_fix = num2bin(fm, S);
+V_fix = num2bin(fm, V);
 
 U = ifft(U,[],3);
 S = ifft(S,[],3);
 V = ifft(V,[],3);
+
+U_fix = num2bin(fm, U);
+S_fix = num2bin(fm, S);
+V_fix = num2bin(fm, V);
 
 if exist('transflag','var')
     Uold =U; U=V; S=tran(S); V=Uold;  
@@ -67,7 +78,7 @@ function [U, S, V] = takeSVDs(U,S,V,A,endI,runPar)
 if ~exist('runPar','var')
     runPar = false;
 end
-    
+
 if ~runPar || matlabpool('size') == 0
 
     for i=1:endI

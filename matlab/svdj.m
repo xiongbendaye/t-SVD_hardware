@@ -65,7 +65,11 @@ V = F(eye(N));
 % implicit matrix B = A' * A. This sum is invariant and we do not
 % need to calculate it again. We normalise it by the matrix size.
 
-On = 0; for c = A, On = On + sum(abs(c).^2); end; On = On ./ N;
+On = 0; 
+for c = A, 
+    On = On + sum(abs(c).^2); 
+end; 
+On = On ./ N;
 
 Previous_Off = Inf; % We test on each sweep to make sure the Off diagonal
                     % sum is reducing. If it does not reduce we stop. We
