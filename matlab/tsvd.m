@@ -11,7 +11,7 @@
 % Edited by       :  Miao Yin, Rutgers University, 2019/6/23
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-function [U,S,V] = tsvd(A, parOP)
+function [U,S,V] = tsvd(A, fix, parOP)
 
 % determine size of tensor
 [n1,n2,n3]=size(A);
@@ -34,11 +34,13 @@ U = zeros(n1,n1,n3);
 S = zeros(n1,n2,n3);
 V = zeros(n2,n2,n3);
 
-fm = quantizer([16,6]);
-
-A_fix = num2bin(fm, A);
 A_hat = fft_tsvd(A);
-A_hat_fix = num2bin(fm, A_hat);
+
+if fix == 1
+    fm = quantizer([16,6]);    
+    A_fix = num2bin(fm, A);    
+    A_hat_fix = num2bin(fm, A_hat);
+end
 
 % Do the conjugate symetric trick here.
 
@@ -52,17 +54,21 @@ for j =n3:-1:endValue+1
 end
 
 %%
-U_fix = num2bin(fm, U);
-S_fix = num2bin(fm, S);
-V_fix = num2bin(fm, V);
+if fix == 1
+    U_fix = num2bin(fm, U);
+    S_fix = num2bin(fm, S);
+    V_fix = num2bin(fm, V);
+end
 
 U = ifft(U,[],3);
 S = ifft(S,[],3);
 V = ifft(V,[],3);
 
-U_fix = num2bin(fm, U);
-S_fix = num2bin(fm, S);
-V_fix = num2bin(fm, V);
+if fix == 1
+    U_fix = num2bin(fm, U);
+    S_fix = num2bin(fm, S);
+    V_fix = num2bin(fm, V);
+end
 
 if exist('transflag','var')
     Uold =U; U=V; S=tran(S); V=Uold;  
@@ -82,13 +88,13 @@ end
 if ~runPar || matlabpool('size') == 0
 
     for i=1:endI
-        [U1,S1,V1]=svdj(A(:,:,i));
+        [U1,S1,V1]=svd(A(:,:,i));
         U(:,:,i)=U1; S(:,:,i)=S1; V(:,:,i)=V1;
     end
 else
     
     parfor i=1:endI
-        [U1,S1,V1]=svdj(A(:,:,i));
+        [U1,S1,V1]=svd(A(:,:,i));
         U(:,:,i)=U1; S(:,:,i)=S1; V(:,:,i)=V1;
     end
 end
